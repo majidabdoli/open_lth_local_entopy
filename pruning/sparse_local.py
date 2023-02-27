@@ -1,4 +1,5 @@
 # Copyright (c) Piota, majidabdoli
+# window of pruning change by WinSize
 
 
 
@@ -48,23 +49,24 @@ class Strategy(base.Strategy):
                    if k in prunable_tensors}
         # Create a vector of all the unpruned weights in the model.
         #weight_vector = np.concatenate([v[current_mask[k] == 1] for k, v in weights.items()])
+        WinSize=8
         for k, v in weights.items():
-            for i in range (0,v.shape[0]-8,8):
-                for j in range (0,v.shape[1]-8,8):
+            for i in range (0,v.shape[0]-WinSize,WinSize):
+                for j in range (0,v.shape[1]-WinSize,WinSize):
                      # Determine the number of weights that need to be pruned.
-                    local_mask=current_mask[k][i:i+8,j:j+8]
+                    local_mask=current_mask[k][i:i+WinSize,j:j+WinSize]
                     number_of_remaining_weights = np.sum([np.sum(vl) for vl in local_mask])
                     number_of_weights_to_prune = np.ceil(
                         pruning_hparams.pruning_fraction * number_of_remaining_weights).astype(int)
-                    weight_vector=v[i:i+8,j:j+8].flatten()
+                    weight_vector=v[i:i+WinSize,j:j+WinSize].flatten()
                     weight_vector=weight_vector[weight_vector!=0]
                     #weight_vector = np.concatenate([v[current_mask[k] == 1] for k, v in weights.items()])
                     threshold = np.sort(np.abs(weight_vector))[number_of_weights_to_prune]
-                    new_mask_local = Mask({k: np.where(np.abs(v[i:i+8,j:j+8]) > threshold,
+                    new_mask_local = Mask({k: np.where(np.abs(v[i:i+WinSize,j:j+WinSize]) > threshold,
                                                         local_mask,
-                                                        np.zeros_like(v[i:i+8,j:j+8]))
+                                                        np.zeros_like(v[i:i+WinSize,j:j+WinSize]))
                                     })
-                    current_mask[k][i:i+8,j:j+8]=new_mask_local[k]
+                    current_mask[k][i:i+WinSize,j:j+WinSize]=new_mask_local[k]
         for k in current_mask:
             if k not in current_mask_n:
                 current_mask_n[k] = current_mask[k]
