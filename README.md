@@ -1,1 +1,1 @@
-"# open_lth-main" 
+Jonathan Frankle's code is in the master folder, and the changes made in the pruning folder are placed in the sparse_local.py and sparse_entropy.py files. To create a mask using the WBP and WEBP methods, the contents of the sparse_local.py and sparse_entropy.py files must be placed in the place of sparse_global.py, respectively.
