@@ -1,2 +1,3 @@
 Due to the unstructured nature of pruning in the Lth method, it performs pruning without considering the location and neighborhood in the input data. In this research, a method to consider the correlation of weights during pruning (WBP) is presented. Also, the amount of pruning is limited to the amount of information available in that area (WEBP).
+
 Jonathan Frankle's code is in the master folder, and the changes made in the pruning folder are placed in the sparse_local.py and sparse_entropy.py files. To create a mask using the WBP and WEBP methods, the contents of the sparse_local.py and sparse_entropy.py files must be placed in the place of sparse_global.py, respectively.
